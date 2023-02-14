@@ -1,2 +1,32 @@
+
+--------------------------------------------------------------------------------------------------------
+Lab 04A: Complete Setup of MySQL Container
+--------------------------------------------------------------------------------------------------------
+
+Step 1: Get the MySQL server docker image
+docker pull mysql/mysql-server:latest
+
+Step 2: Start MySQL server in Docker
+docker run --name=mysql1 -p 3300:3300 -e MYSQL_ROOT_PASSWORD=123456 -d mysql/mysql-server:8.0
+
+Step 3: Connecting to MySQL server from within container
+docker exec -it mysql1 mysql -uroot -p
+
+Step 4: Executing sql
+show databases;
+
+Step 5: Stopping the container
+docker stop mysql1
+
+Step 6: Removing the container
+docker rm mysql1
+
+
+--------------------------------------------------------------------------------------------------------
+Lab 04B: Complete Setup of MySQL Container
+--------------------------------------------------------------------------------------------------------
+
+
+
 Setup the postgresql container
 Create a table and demonstrate CRUD operations
