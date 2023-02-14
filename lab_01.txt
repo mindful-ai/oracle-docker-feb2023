@@ -1,0 +1,2 @@
+Setup the postgresql container
+Create a table and demonstrate CRUD operations
