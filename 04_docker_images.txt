@@ -47,3 +47,30 @@ In the second pass,
 put that command before redis and observe the results
 
 What do you infer?
+
+
+Part 4: Tagging the Images
+--------------
+
+docker build -t purushotham1982/redis:latest .
+docker ps -all
+
+Part 5: Docker commit -> manual configuration
+------------
+
+Note: This is not quite often used in the production environment
+
+Terminal: 1
+
+docker run -it alpine sh
+# apk add --update redis -> on the shell
+
+Terminal : 2
+
+Get the id of the running container in terminal 1, say 681a726b5e3d
+
+docker commit -c 'CMD ["redis-server"]' 681a726b5e3d
+You get a really long id. Don't forget the space!!
+
+You can now run that manually customized container
+docker run <just use first few numbers of the id>
