@@ -52,7 +52,7 @@ What do you infer?
 Part 4: Tagging the Images
 --------------
 
-docker build -t purushotham1982/redis:latest .
+docker build -t <your docker id>/redis:latest .
 docker ps -all
 
 Part 5: Docker commit -> manual configuration
