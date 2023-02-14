@@ -26,7 +26,7 @@ docker rm mysql1
 Lab 04B: Complete Setup of MySQL Container
 --------------------------------------------------------------------------------------------------------
 
-
-
 Setup the postgresql container
 Create a table and demonstrate CRUD operations
+
+
