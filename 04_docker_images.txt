@@ -69,8 +69,9 @@ Terminal : 2
 
 Get the id of the running container in terminal 1, say 681a726b5e3d
 
-docker commit -c 'CMD ["redis-server"]' 681a726b5e3d
-You get a really long id. Don't forget the space!!
+docker commit -c 'CMD "redis-server"' 681a726b5e3d 
+You get a really long id. 
+sha256:7e48a5bdd19201effe523eefe0eb1f39a355e5e417558e35e81eec0da451bef8
 
 You can now run that manually customized container
 docker run <just use first few numbers of the id>
