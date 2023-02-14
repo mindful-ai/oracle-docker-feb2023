@@ -1,0 +1,49 @@
+--------------------------------------------------------------------------------------------------------
+Lab 05: Docker Images
+--------------------------------------------------------------------------------------------------------
+
+Part 1: Building a Docker Image
+------------
+
+Objective: to create an image that runs redis server
+
+mkdir redis-image
+cd redis-image
+--------------------------------------------
+Invoke VSC: code .
+
+Create a file: Dockerfile
+
+# Use an existing image as the base image
+# Download and install dependencies
+# Tell the image what to do
+
+FROM alpine
+RUN apk add --update redis (not a docker command, apache package manager)
+CMD ["redis-server"]
+
+Build-kit enabled by default.
+Preferences -> Docker Engine -> False
+
+--------------------------------------------
+
+docker build .
+docker run <id>
+
+Part 2: Observe the docker build process
+------------
+
+docker build .
+Observe the temporary ids cretaed along the way while build is happening
+
+Part 3: Re-builds from cache
+-------------
+
+Add an extra command to install gcc
+RUN apk add -update gcc
+after redis command
+
+In the second pass,
+put that command before redis and observe the results
+
+What do you infer?
