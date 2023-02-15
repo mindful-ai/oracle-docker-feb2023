@@ -1,0 +1,35 @@
+--------------------------------------------------------------------------------------------------------
+Lab 07: Another Practice Project -> Flask Application
+--------------------------------------------------------------------------------------------------------
+
+Preliminary studies:
+1. We need python (installed on OS) and Flask (added as a module later)
+2. Flash is third party, we need to install it
+3. Run the server manually and examine what it does
+
+Download flask application from:
+https://github.com/mindful-ai/DOCKER26092022 -> flaskapp
+
+Into the flask application directory and a Dockerfile:
+FROM alpine
+
+RUN apk add --update --no-cache python3
+RUN ln -sf python3 /usr/bin/python
+RUN python3 -m ensurepip
+RUN pip3 install --no-cache --upgrade pip setuptools
+RUN pip3 install flask
+
+WORKDIR /usr/apps
+COPY ./ ./
+EXPOSE 5000
+CMD ["python3", "server.py"]
+
+Some changes:
+app.run(host='0.0.0.0', port='5000') <- server.py
+return send_file(r"pics/kailash.jpg") -- line 25 in server.py
+
+Build and run the image:
+docker build -t purushotham1982/flasksampleapp:v01 .
+docker run -p 5000:5000 purushotham1982/flasksampleapp:v01
+
+Check on the browser: http://127.0.0.1:5000
