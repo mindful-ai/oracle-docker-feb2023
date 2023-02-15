@@ -1,0 +1,111 @@
+--------------------------------------------------------------------------------------------------------
+Lab 06: Practice Project
+--------------------------------------------------------------------------------------------------------
+
+Step 1: Create package.json and index.js in a directory called simpleweb
+--------------------
+package.json
+{
+    "dependencies": { "express": "*"},
+    "scripts": { "start": "node index.js"}
+}
+
+index.js
+const express = require("express");
+const app = express();
+
+app.get('/', (req, res) => {
+    res.send("Hello There");
+});
+
+app.listen(8080, () => {
+    console.log("Listening on port 8080");
+});
+
+Dockerfile
+FROM alpine
+RUN npm install
+CMD ["npm","start"]
+
+docker build .
+
+What do you see?
+
+Step 2: Fixing the error
+--------------------
+Our image is alpine and it does not have npm
+Two options: choose another base image or add a command to configure npm
+We will go with first options
+
+Docker Hub -> Search node
+docker image with pre-installed node
+node:14-alpine
+
+Let's choose node:alpine many popular repositories offer alpine version their repository
+Using just node, would install many extra things which we don't require
+
+docker build . (note: can take a while)
+
+Does the build process complete? 
+
+Renaming <none> images:
+docker tag 33e0196e8630 node_image
+docker images
+
+Step 3: Copying the files
+--------------------
+
+docker run 33e0196e8630
+
+node:alpine FS snapshot doesn't have our files in the filesystem of the container
+We need the files package.json and index.js before npm build
+
+Add COPY ./ ./ into the Dockerfile before RUN
+
+docker build -t purushotham1982/simpleweb:latest .
+
+Step 4: Creating work directories
+--------------------
+
+docker run -it purushotham1982/simpleweb sh
+ls -l
+
+We see the user files on the top
+It is better to organize those files to prevent unnecassary modification that can cause issues
+There fore it is better to specify work directory
+
+WORKDIR /usr/app -> if not existing it will automatically docker will automatically create for us
+All commands will be executed relative to /usr/app
+Add it before COPY
+
+docker build .
+docker run <id>
+
+Try accessing the application on the browser: localhost:8080
+
+Step 5: Port mapping
+--------------------
+Forward the request available in the host to some port in the container
+docker run -p 8080:8080 d9ae54e4bdfa
+docker run -p 3000:8080 d9ae54e4bdfa  what happened??
+docker run -p 8080:3000 d9ae54e4bdfa  ehat happened??
+
+Step 6: Re-builds
+--------------------
+
+Change the line in index.js
+res.send("Some text")
+Does it change on the browser on refresh? Why is that?
+
+Step 7: Minimizing cache busting 
+-------------------------
+
+When you re-build the container
+COPY ./ ./ was invalidated as there was a change to one of the source files.
+In the re-build process npm dependencies were also re-build
+This is not needed.
+
+Therefore it would be better to put COPY after RUN
+Docker will re-build only from the point the sequence changed
+
+Test this
