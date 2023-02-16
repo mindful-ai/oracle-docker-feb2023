@@ -1,0 +1,85 @@
+Setup the files:
+
+requirements.txt
+
+Django>=3.0,<4.0
+psycopg2>=2.8
+
+
+Dockerfile
+
+FROM python:3
+WORKDIR /code
+COPY requirements.txt /code
+RUN pip install -r requirements.txt
+
+
+docker-compose.yml
+
+version: '3'
+services:
+  db:
+    image: postgres
+    volumes:
+      - ./data/db:/var/lib/postgres/data
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    environment:
+      - POSTGRES_NAME=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    depends_on:
+      - db
+
+---------------------------------------------------------------------------------
+
+docker compose run web django-admin startproject composeexample .
+
+---------------------------------------------------------------------------------
+
+In the local machine, goto settings.py
+
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('POSTGRES_NAME'),
+        'USER' :  os.environ.get('POSTGRES_USER'),
+        'PASSWORD' : os.environ.get('POSTGRES_PASSWORD'),
+        'HOST' : 'db',
+        'PORT' : 5432,
+
+---------------------------------------------------------------------------------
+
+urls.py
+
+from django.contrib import admin
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', views.index, name='index')
+]
+
+---------------------------------------------------------------------------------
+
+views.py
+
+from django.http import HttpResponse
+
+
+def index(request):
+    return HttpResponse("<h1>Hello, World!</h1>")
+
+---------------------------------------------------------------------------------
+
+docker-compose up
+127.0.0.1:8000 -> in the browser
+docker-compose down
