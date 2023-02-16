@@ -1,0 +1,9 @@
+version: '3'
+services:
+  frontend:
+    image: node:latest
+    volumes: 
+      - myapp:/home/node/app
+volumes:
+  myapp:
+    external: true

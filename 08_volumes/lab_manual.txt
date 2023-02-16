@@ -1,0 +1,31 @@
+docker volume create newvolume
+docker volume ls
+docker volume inspect newvolume
+docker volume rm newvolume
+
+------------------------------------------------------
+
+Starting a container with a volume
+docker run -d --name dev --mount source=myvol2,target=/app nginx:latest
+
+Check the volume using:
+-> docker volume ls
+
+docker container stop dev
+docker container rm dev
+docker volume rm myvol2
+
+------------------------------------------------------
+
+version: '3'
+services:
+  frontend:
+    image: node:latest
+    volumes: 
+      - myapp:/home/node/app
+volumes:
+  myapp:
+    external: true
+
+Ensure you have created an external volume called myapp using 
+-> docker volume create myapp
