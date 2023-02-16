@@ -1,0 +1,33 @@
+Networking commands
+---------------------
+Creating: docker network create mynetwork
+Disconnecting: docker network disconnect mynetwork 0f8d7a833f42
+Inspecting: docker network inspect mynetwork
+Removing a network: docker network rm mynetwork
+
+Listing all the networks
+-> docker network ls
+
+--------------------------------------------------------------------------------------------------
+
+Objective: creating two containers and trying to ping through the network
+
+docker run --rm --name mynginx --detach nginx
+docker inspect mynginx -> Manually make note of IPAddress : 172.17.0.2
+docker run -it busybox sh
+
+/ # wget  172.17.0.2:80  -> fetches the index.html of nginx server
+
+Without  closing the busybox, in a different terminal issue:
+-> docker network inspect bridge
+
+and observer the two containers connected to it.
+
+--------------------------------------------------------------------------------------------------
+
+docker network create avengers
+docker run --rm --net avengers --name thor nginx
+docker run --net avengers -it busybox sh
+# wget thor:80 -> no need of IP address as we are on the user defined network
+
+Clean up and remove the network
