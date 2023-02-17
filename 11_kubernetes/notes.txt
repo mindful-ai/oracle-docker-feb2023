@@ -1,0 +1,44 @@
+Install kubectl
+
+https://kubernetes.io/docs/tasks/tools/install-kubectl-windows/
+kubectl version --short
+
+--------------------------------------------------------------------------------------
+
+Start kubernetes on docker desktop
+
+--------------------------------------------------------------------------------------
+Check setup using the follwing commands:
+
+ kubectl get svc
+ kubectl get pods -n kube-system
+
+--------------------------------------------------------------------------------------
+
+Setup the yaml file ->
+
+In this Kubernetes YAML file, we have two objects, separated by the ---:
+
+A Deployment, describing a scalable group of identical pods. In this case, you’ll get just one replica, 
+or copy of your pod, and that pod (which is described under the template: key) has just one container in it, 
+based off of your getting-started image from the previous step in this tutorial.
+
+A NodePort service, which will route traffic from port 30001 on your host to port 3000 inside the pods it routes to, 
+allowing you to reach your Todo app from the network.
+Also, notice that while Kubernetes YAML can appear long and complicated at first, 
+it almost always follows the same pattern:
+
+The apiVersion, which indicates the Kubernetes API that parses this object
+The kind indicating what sort of object this is
+Some metadata applying things like names to your objects
+The spec specifying all the parameters and configurations of your object.
+
+--------------------------------------------------------------------------------------
+
+kubectl apply -f test.yaml
+kubectl get deployments -> pods up and running
+kubectl get services -> services running
+
+--------------------------------------------------------------------------------------
+
+kubectl delete -f test.yaml
