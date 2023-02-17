@@ -1,0 +1,101 @@
+--------------------------------------------------------------------------------------------------------
+Lab 10: Docker Swarm
+--------------------------------------------------------------------------------------------------------
+
+Objective:
+
+Suppose you want to store courses name and courses ID, for which you will need a web application. 
+Basically, you need one container for web application and you need one more container as MySQL for the backend, 
+That MySQL container should be linked to the web application container. 
+
+How to execute this practically?
+
+Steps involved:
+Initialize Docker Swarm to form a Swarm cluster.
+Create an Overlay Network
+Create services for both web application and MySQL
+Connect the applications through the network
+
+Step 1:
+
+ifconfig
+docker swarm init --advertise-addr 172.17.0.1 --listen-addr 0.0.0.0
+The –advertise-addr flag configures the manager node to publish its address 
+The other nodes in the swarm must be able to access the manager at the IP address.
+
+Step 2:
+
+If you want to join this manager node to the worker node, 
+copy the link that you get when you initialize swarm on the worker node.
+
+docker swarm join --token SWMTKN-1-3evm0bjmiywwgsqfms8wbwvnlse7l1nl2ieit2593euo30uj2m-4fuzu5q3qh3wcf95hz684xu3n 172.17.0.1:2377
+
+To add a manager to this swarm, run 'docker swarm join-token manager' and follow the instructions.
+
+Step 3:
+Creating an overlay network
+docker network create -d overlay myoverlaynetwork
+
+Step 4:
+
+Create a service webapp1 and use the network you have created to deploy this service over the swarm cluster.
+docker service create --name webapp1 -d --network myoverlaynetwork -p 8001:80 hshar/webapp
+
+Where -p is for port forwarding, hshar is the account name on Docker Hub, 
+and webapp is the name of the web application already present on Docker Hub.
+
+Check if the service is created or not:
+	
+docker service ls
+
+Step 5:
+
+Create a service and add to the network
+docker service create --name mysql -d --network myoverlaynetwork -p 3306:3306 hshar/mysql:5.5
+docker service ls
+
+Step 6:
+
+Check which container is working on your master node
+docker ps
+
+0107e9e7d1d4   hshar/webapp:latest ..................
+
+Get into the container and examine:
+docker exec -it 0107e9e7d1d4 bash
+nano var/www/html/index.php
+
+Step 7:
+Now, change the $servername from localhost to mysql and $password from “”” to "root", 
+and also change all fill in the database details required and save your index.php file by 
+using the keyboard shortcut Ctrl+x and after that y to save, and press enter.
+
+$servername = "mysql";
+$username = "root";
+$password = "root";
+$dbname = "HandsOn";
+$name=$_POST["course_name"];
+$phone=$_POST["course_id"];
+
+Step 8:
+Go into the mysql container which is running on another node.
+
+docker exec -it fad80ff88170 bash
+
+mysql -u root -proot
+
+Issue SQL commands:
+CREATE DATABASE HandsOn;
+USE HandsOn;
+CREATE TABLE course_details (course_name VARCHAR(10), course_id VARCHAR(11));
+exit
+
+Step 9:
+Go to your browser and enter the address as localhost:8001/index.php. 
+This will open up your web application. Now, enter the details of courses 
+and click on Submit Query.
+
+Note: If this doesn't work due to connection failed error, change password to "edureka" in webapp1 container
+
+Step 10:
+Go back to MySQL container and check if the query has been added
