@@ -1,0 +1,13 @@
+Generate the application image:
+docker build --tag flask-test-app:latest .
+
+Deploying to Kubernetes Service:
+kubectl apply -f deployment.yaml
+
+Checking dashboard:
+minikube dashboard
+
+Accessing application:
+minikube start service: flask-test-service
+
+Access @ 127.0.0.1:5000
